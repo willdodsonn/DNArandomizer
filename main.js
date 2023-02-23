@@ -6,7 +6,7 @@ const returnRandBase = () => {
 
 // Returns a random single stand of DNA containing 15 bases
 const mockUpStrand = () => {
-  const newStrand = '';
+  const newStrand = "";
   for (let i = 0; i < 15; i++) {
     // newStrand.push(returnRandBase());
     newStrand += returnRandBase();
@@ -20,51 +20,74 @@ const pAequorFactory = (specimenNum, dna) => {
     dna: dna,
     mutate() {
       // const formerDnaArray = ['A', 'T', 'C', 'G'];
-      const dnaArray = this.dna.split('');
+      const dnaArray = this.dna.split("");
       const randomBase = returnRandBase();
       const randomIndex = Math.floor(Math.random() * dnaArray.length);
-      const randomChar = randomBase[Math.floor(Math.random() * randomBase.length)];
+      const randomChar =
+        randomBase[Math.floor(Math.random() * randomBase.length)];
       dnaArray[randomIndex] = randomChar;
-      this.dna = dnaArray.join('');
+      this.dna = dnaArray.join("");
       return this.dna;
     },
     compareDna(pAequorDna) {
       let count = 0;
-      for (let i = 0; i < this.dna.length; i++){
-        if(this.dna[i] === pAequorDna.dna[i]){
+      for (let i = 0; i < this.dna.length; i++) {
+        if (this.dna[i] === pAequorDna.dna[i]) {
           count++;
         }
       }
-      const percentDiff = (1 - (count / this.dna.length)) * 100;
-      return percentDiff+'%';
+      const percentDiff = (1 - count / this.dna.length) * 100;
+      return percentDiff + "%";
     },
-    willLikelySurvive(){
-      const elementCount = this.dna.split('').filter(strand => strand === 'C' || strand === 'G').length;
+    willLikelySurvive() {
+      const elementCount = this.dna
+        .split("")
+        .filter((strand) => strand === "C" || strand === "G").length;
       const elementPercent = (elementCount / this.dna.length) * 100;
       return elementPercent >= 60;
-    }
+    },
+    complementStrand() {
+      let complement = "";
+      for (let i = 0; i < this.dna.length; i++) {
+        switch (this.dna[i]) {
+          case "A":
+            complement += "T";
+            break;
+          case "T":
+            complement += "A";
+            break;
+          case "C":
+            complement += "G";
+            break;
+          case "G":
+            complement += "C";
+            break;
+          default: console.log(`${this.dna[i]} is not a real strand!`)  
+        }
+      }
+      return complement;
+    },
   };
 };
 
 const pAequorData = [];
 
-while (pAequorData.length < 30){
+while (pAequorData.length < 30) {
   const newData = pAequorFactory(pAequorData.length + 1, returnRandBase());
   if (newData.willLikelySurvive()) {
     pAequorData.push(newData);
   }
 }
 
-console.log(pAequorData);
+// console.log(pAequorData);
 
 // const pAequor1 = pAequorFactory(1, 'CGCGCG');
 // const pAequor2 = pAequorFactory(2, 'ACCC');
-// console.log(pAequor1.willLikelySurvive()); 
+// console.log(pAequor1.willLikelySurvive());
 
-// const pAequor = pAequorFactory(2, 'ATCG');
-// console.log(pAequor);
+const pAequor = pAequorFactory(2, 'ATCG');
+console.log(pAequor.complementStrand());
 
 // const mutateDna = pAequor.mutate();
 // console.log(mutateDna);
 // console.log(pAequor)
-
